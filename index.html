@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER NARXOZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0a0a0a; --main-red: #ff0505; --pure-white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: var(--pure-white); font-family: 'Exo 2', sans-serif; overflow-x: hidden; }
+
+        header {
+            position: fixed; top: 0; width: 100%; padding: 15px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 0, 0, 0.95); z-index: 1000; border-bottom: 2px solid var(--main-red);
+        }
+        .logo { font-family: 'Orbitron'; font-size: 22px; font-weight: 900; }
+        .logo span { color: var(--main-red); }
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { color: #fff; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        nav a:hover { color: var(--main-red); }
+
+        .media-controls {
+            position: fixed; top: 100px; right: 20px; z-index: 1100;
+            background: #000; border: 1px solid var(--main-red); padding: 8px; cursor: move; width: 140px;
+        }
+        .media-btn {
+            display: block; width: 100%; padding: 6px; margin: 4px 0;
+            background: transparent; color: white; border: 1px solid white;
+            font-family: 'Orbitron'; font-size: 9px; cursor: pointer;
+        }
+        .media-btn.active { background: var(--main-red); border-color: var(--main-red); }
+
+        .hero {
+            height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('баннер.jpeg');
+            background-size: cover; background-position: center; text-align: center;
+        }
+        .hero h1 { font-family: 'Orbitron'; font-size: 45px; margin-bottom: 20px; }
+        .hero-btns { display: flex; gap: 15px; }
+        .btn { padding: 10px 25px; font-family: 'Orbitron'; font-size: 11px; text-decoration: none; font-weight: 700; transition: 0.3s; cursor: pointer; border: none; display: inline-block; }
+        .btn-red { background: var(--main-red); color: white; }
+        .btn-white { border: 2px solid white; color: white; background: transparent; }
+
+        section { padding: 50px 8%; text-align: center; }
+        .s-title { font-family: 'Orbitron'; font-size: 1.8rem; margin-bottom: 30px; border-left: 4px solid var(--main-red); padding-left: 15px; display: inline-block; }
+
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .card { background: #111; padding: 20px; border: 1px solid #222; transition: 0.3s; }
+        .card:hover { border-color: var(--main-red); transform: translateY(-5px); }
+        .card img { width: 100%; height: 120px; object-fit: contain; margin-bottom: 15px; }
+
+        .tourney-wrap { background: #111; padding: 20px; border-top: 3px solid var(--main-red); overflow-x: auto; }
+        table { width: 100%; text-align: left; border-collapse: collapse; min-width: 600px; }
+        th { color: var(--main-red); padding: 12px; border-bottom: 2px solid var(--main-red); font-family: 'Orbitron'; text-transform: uppercase; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid #222; font-size: 14px; }
+
+        .video-box { width: 100%; max-width: 750px; margin: 0 auto; border: 2px solid var(--main-red); }
+        video { width: 100%; display: block; }
+
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; min-height: 180px; }
+        .news-item { background: #111; padding: 20px; border-right: 4px solid var(--main-red); transition: 0.3s; animation: fadeIn 0.5s; }
+
+        .chat-container { 
+            position: fixed; bottom: 90px; right: 30px; width: 300px; height: 380px; 
+            background: #000; border: 2px solid var(--main-red); display: none; flex-direction: column; z-index: 2001; 
+        }
+        #chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #050505; font-size: 12px; }
+        .bot-msg { background: var(--main-red); color: white; padding: 8px; border-radius: 0 8px 8px 8px; align-self: flex-start; max-width: 85%; }
+        .user-msg { background: #333; color: white; padding: 8px; border-radius: 8px 8px 0 8px; align-self: flex-end; max-width: 85%; }
+        .chat-input-area { display: flex; border-top: 1px solid #222; }
+        #chat-input { flex: 1; background: #000; border: none; color: white; padding:12px; outline: none; }
+        .chat-bot-icon { position: fixed; bottom: 20px; right: 30px; width: 60px; height: 60px; background: var(--main-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; font-size: 25px; }
+
+        footer { padding: 30px 8%; background: #000; border-top: 1px solid #222; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body onmousemove="drag(event)" onmouseup="stopDrag()">
+
+    <header>
+        <div class="logo">CYBER <span>NARXOZ</span></div>
+        <nav>
+            <ul>
+                <li><a href="#games">Ойындар</a></li>
+                <li><a href="#tournaments">Турнирлер</a></li>
+                <li><a href="#teams">Командалар</a></li>
+                <li><a href="#news">Жаңалықтар</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="pnl" class="media-controls" onmousedown="startDrag(event)">
+        <button id="vBtn" class="media-btn" onclick="toggleV()">VIDEO: OFF</button>
+        <button id="mBtn" class="media-btn" onclick="toggleM()">MUSIC: OFF</button>
+        <audio id="audio" loop><source src="музыка.mpeg"></audio>
+    </div>
+
+    <section class="hero">
+        <h1>КИБЕРСПОРТ <span style="color: var(--main-red);">ПОРТАЛЫ</span></h1>
+        <div class="hero-btns">
+            <a href="https://twitch.tv" target="_blank" class="btn btn-red">LIVE ТРАНСЛЯЦИЯ</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScjP3qWOH-hIPQcXY1qmnczOHCmOb68Ct9BCd8dYYDWOlFO2w/viewform?usp=header" target="_blank" class="btn btn-white">КЕРІ БАЙЛАНЫС</a>
+        </div>
+    </section>
+
+    <section id="games">
+        <h2 class="s-title">Ойындар</h2>
+        <div class="grid-4">
+            <div class="card"><img src="CS2.jpeg" alt="CS2"><h3>CS 2</h3></div>
+            <div class="card"><img src="Dota 2.jpeg" alt="Dota 2"><h3>Dota 2</h3></div>
+            <div class="card"><img src="Valorant.jpeg" alt="Valorant"><h3>Valorant</h3></div>
+            <div class="card"><img src="LoL.jpeg" alt="LoL"><h3>LoL</h3></div>
+        </div>
+    </section>
+
+    <section id="tournaments">
+        <h2 class="s-title">Турнирлер кестесі</h2>
+        <div class="tourney-wrap">
+            <table>
+                <tr><th>Оқиға</th><th>Ойын</th><th>Жүлде қоры</th><th>Мәртебесі</th></tr>
+                <tr><td>PGL Major Copenhagen</td><td>CS 2</td><td>$1,250,000</td><td>Аяқталды</td></tr>
+                <tr><td>The International 2024</td><td>Dota 2</td><td>$2,500,000+</td><td>Күтілуде</td></tr>
+                <tr><td>Valorant Champions</td><td>Valorant</td><td>$2,250,000</td><td>Жақын арада</td></tr>
+                <tr><td>Worlds 2024</td><td>LoL</td><td>$2,225,000</td><td>Қазан</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section id="video-sec">
+        <h2 class="s-title">Бейне Шолу</h2>
+        <div class="video-box">
+            <video id="video" loop>
+                <source src="видео.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <section id="teams">
+        <h2 class="s-title">Топ Командалар</h2>
+        <div class="grid-4">
+            <div class="card"><img src="Navi.jpeg" alt="NAVI"><h4>NAVI</h4></div>
+            <div class="card"><img src="Spirit.jpeg" alt="Spirit"><h4>Spirit</h4></div>
+            <div class="card"><img src="FaZe.jpeg" alt="FaZe"><h4>FaZe</h4></div>
+            <div class="card"><img src="G2 Esports.jpeg" alt="G2"><h4>G2 Esports</h4></div>
+        </div>
+    </section>
+
+    <section id="news">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 class="s-title" style="margin:0;">AI Агент</h2>
+            <button class="btn btn-red" onclick="genNews()">ЖАҢАЛЫҚТАРДЫ АУЫСТЫРУ</button>
+        </div>
+        <div class="news-grid" id="news-box"></div>
+    </section>
+
+    <footer>
+        <p style="text-align: center;">Автор: Жанбаева Жанел және Баймахан Айым | Нархоз Университеті | АКТ 2025</p>
+    </footer>
+
+    <div class="chat-container" id="chat">
+        <div style="background:var(--main-red); padding:12px; font-weight:bold;">AI ASSISTANT</div>
+        <div id="chat-messages"><div class="bot-msg">Сәлем! Сұрағыңызға жауап беруге дайынмын.</div></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-in" placeholder="Сұрақ қойыңыз..." onkeypress="if(event.key==='Enter') send()">
+            <button onclick="send()" style="background:red; color:white; border:none; padding:10px;">></button>
+        </div>
+    </div>
+    <div class="chat-bot-icon" onclick="toggleChat()">🤖</div>
+
+    <script>
+        let isD = false, offset = {x:0, y:0};
+        const p = document.getElementById('pnl');
+        function startDrag(e) { isD = true; offset.x = e.clientX - p.offsetLeft; offset.y = e.clientY - p.offsetTop; }
+        function drag(e) { if(isD) { p.style.left = (e.clientX-offset.x)+'px'; p.style.top = (e.clientY-offset.y)+'px'; p.style.right='auto'; } }
+        function stopDrag() { isD = false; }
+
+        const v = document.getElementById('video'); 
+        const a = document.getElementById('audio');
+
+        function toggleM() { 
+            const b = document.getElementById('mBtn'); 
+            if(a.paused){ a.play(); b.innerText="MUSIC: ON"; b.classList.add('active'); } 
+            else { a.pause(); b.innerText="MUSIC: OFF"; b.classList.remove('active'); }
+        }
+
+        function toggleV() { 
+            const b = document.getElementById('vBtn'); 
+            if(v.paused){ 
+                v.play(); 
+                b.innerText="VIDEO: ON"; 
+                b.classList.add('active'); 
+            } else { 
+                v.pause(); 
+                b.innerText="VIDEO: OFF"; 
+                b.classList.remove('active'); 
+            }
+        }
+
+        const nData = [
+            {t:"AI Болжам", c:"Spirit командасының келесі турнирде жеңу мүмкіндігі 92%."},
+            {t:"Нархоз IT", c:"Жаңа кибер-лабораторияда AI жаттықтырушы іске қосылды."},
+            {t:"Трансфер", c:"NiKo-ның G2-ден ауысуы туралы қауесеттер расталуда."},
+            {t:"CS2 Мета", c:"Соңғы жаңартудан кейін M4A1-S қолданысы 15%-ға артты."},
+            {t:"Dota 2", c:"The International-да жаңа кейіпкер таныстырылуы мүмкін."},
+            {t:"Инновация", c:"Нархоз студенттері киберспорттық талдау жасатын AI жасап шықты."}
+        ];
+        function genNews() {
+            const box = document.getElementById('news-box'); box.innerHTML = "";
+            const shuffled = [...nData].sort(() => 0.5 - Math.random());
+            shuffled.slice(0, 3).forEach(item => {
+                box.innerHTML += `<div class="news-item"><h4 style="color:red; font-size:14px;">${item.t}</h4><p style="font-size:12px; color:#ccc; margin-top:10px;">${item.c}</p></div>`;
+            });
+        }
+        window.onload = genNews;
+
+        function toggleChat() { const c=document.getElementById('chat'); c.style.display=c.style.display==='flex'?'none':'flex'; }
+        function send() {
+            const inpt = document.getElementById('chat-in'), box = document.getElementById('chat-messages');
+            if(!inpt.value) return;
+            box.innerHTML += `<div class="user-msg">${inpt.value}</div>`;
+            let val = inpt.value.toLowerCase(), res = "Кешіріңіз, түсінбедім. Нархоз, Ойындар немесе Авторлар туралы сұрап көріңіз.";
+            if(val.includes("сәлем")) res = "Сәлем! Хал-жағдайыңыз қалай?";
+            else if(val.includes("нархоз")) res = "Нархоз Университеті - киберспортты дамытатын Қазақстандағы үздік оқу орны!";
+            else if(val.includes("ойын") || val.includes("cs") || val.includes("dota")) res = "Біздің порталда CS2, Dota 2 және Valorant бойынша ең өзекті ақпараттар бар.";
+            else if(val.includes("автор")) res = "Жоба авторлары: Жанбаева Жанел және Баймахан Айым. Нархоз студенттері.";
+            
+            setTimeout(() => { box.innerHTML += `<div class="bot-msg">${res}</div>`; box.scrollTop = box.scrollHeight; }, 500);
+            inpt.value = "";
+        }
+    </script>
+</body>
+</html>
